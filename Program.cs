@@ -140,7 +140,16 @@ namespace BlackJackCS
 
 
                 }
+
+
+
                 Console.WriteLine($"Player's Score: {score}");
+
+                Console.WriteLine();
+
+                Console.WriteLine($"Dealer's hand:");
+                Console.WriteLine($"{deck[2].Rank} of {deck[2].Suit} and a hidden card");
+                Console.WriteLine();
                 var answer = "Play";
 
                 var endPlayerTurn = "no";
@@ -149,20 +158,23 @@ namespace BlackJackCS
                 while (score < 21 && endPlayerTurn != "yes")
                 {
                     Console.Write("Hit or Stand? ");
+
                     answer = Console.ReadLine();
+                    Console.WriteLine();
                     if (answer == "Hit" || answer == "hit")
                     {
-                        int newCard = playerHand.Count + 2;
+                        int newCard = playerHand.Count + dealerHand.Count;
                         playerHand.Add(deck[newCard]);
                         Console.WriteLine($"{deck[newCard].Rank} of {deck[newCard].Suit}");
 
                         score = score + deck[newCard].Value();
-                        Console.WriteLine($"Score = {score}");
+                        Console.WriteLine($"Player's score: {score}");
                         newCard++;
 
                     }
                     else if (answer == "Stand" || answer == "stand")
                     {
+                        Console.WriteLine();
                         Console.WriteLine($"Score = {score}");
                         endPlayerTurn = "yes";
                     }
@@ -187,7 +199,7 @@ namespace BlackJackCS
                 // }
                 else
                 {
-                    Console.WriteLine("Bust. Player loses.");
+                    Console.WriteLine("Bust.");
                 }
 
 
@@ -250,9 +262,13 @@ namespace BlackJackCS
                 Console.WriteLine();
                 Console.Write("Want to play again? y/n ");
 
-                var anotherGame = Console.ReadLine();
+                string anotherGame = Console.ReadLine();
 
-                if (anotherGame == "y")
+                // why didn't this work??
+                // anotherGame = anotherGame.ToLower;
+                // anotherGame.ToLower;
+
+                if (anotherGame == "y" || anotherGame == "yes")
                 {
                     Console.WriteLine();
                 }
