@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJackCS
 {
+    // make card class
     class Card
     {
         public string Rank { get; set; }
@@ -60,66 +61,11 @@ namespace BlackJackCS
         }
 
     }
-    class LowCard
-    {
-        public string Rank { get; set; }
-        public string Suit { get; set; }
-        public string Name()
-        {
-            var nameOfCard = $"{Rank} of {Suit}";
-            return nameOfCard;
-        }
-        public int Value()
-        {
-            int value = 0;
 
-            switch (Rank)
-            {
-                case "Ace":
-                    value = 1;
-                    break;
-                case "2":
-                    value = 2;
-                    break;
-                case "3":
-                    value = 3;
-                    break;
-                case "4":
-                    value = 4;
-                    break;
-                case "5":
-                    value = 5;
-                    break;
-                case "6":
-                    value = 6;
-                    break;
-                case "7":
-                    value = 7;
-                    break;
-                case "8":
-                    value = 8;
-                    break;
-                case "9":
-                    value = 9;
-                    break;
-                case "10":
-                case "Jack":
-                case "Queen":
-                case "King":
-                    value = 10;
-                    break;
-                default:
-                    value = 0;
-                    break;
-
-            }
-            return value;
-        }
-
-    }
 
     class Program
     {
+        // Shuffle method
         static List<Card> Shuffle(List<Card> newDeck)
         {
             // numberOfCards = length of our deck
@@ -145,26 +91,8 @@ namespace BlackJackCS
             return newDeck;
 
         }
-        // static int LowAceScore(List<Card> aceHand)
-        // {
-        //     int newScore = 0;
 
-        //     foreach (var aCard in aceHand)
-        //     {
-        //         if (aCard.Rank == "Ace")
-        //         {
-        //             var lowCard = new LowCard { Suit = aCard.Suit, Rank = aCard.Rank };
-        //             aceHand.Remove(aCard);
-        //             aceHand.Add(lowCard);
-
-        //         }
-        //         int newPoints = aCard.Value();
-        //         newScore = newScore + newPoints;
-
-        //     }
-        //     return newScore;
-
-        // }
+        // find score
         static int FindScore(List<Card> theHand)
         {
             int someScore = 0;
@@ -177,23 +105,7 @@ namespace BlackJackCS
             }
             return someScore;
         }
-        // static int TryAgain(List<Card> aceHand)
-        // {
-        //     int lowScore = 0;
-        //     int extraPoints = 0;
-        //     foreach (var aCard in aceHand)
-        //     {
-        //         if (aCard.Rank == "Ace")
-        //         {
-        //             aceHand.Remove(aCard);
-        //             extraPoints = extraPoints + 1;
-        //         }
 
-        //     }
-        //     var newScore = FindScore(aceHand);
-        //     lowScore = newScore + extraPoints;
-        //     return lowScore;
-        // }
         static List<Card> NewerHand(List<Card> aceHand)
         {
 
@@ -233,6 +145,7 @@ namespace BlackJackCS
             {
 
                 Console.WriteLine("Let's Play Blackjack!!");
+                // set up lists for deck, suits, and ranks
                 var startDeck = new List<Card>();
 
                 var suits = new List<string>() { "Clubs", "Diamonds", "Hearts", "Spades" };
@@ -282,6 +195,28 @@ namespace BlackJackCS
 
                 scoreA = FindScore(playerHand);
 
+                if (scoreA > 21)
+                {
+                    foreach (var findAce in playerHand)
+                    {
+                        if (findAce.Rank == "Ace")
+                        {
+
+                            var acePoints = AcePoint(playerHand);
+                            var diffHand = NewerHand(playerHand);
+                            var newScore = FindScore(diffHand);
+
+
+
+                            scoreA = newScore + acePoints;
+
+
+
+                        }
+                    }
+                }
+
+
                 Console.WriteLine($"Player's Score: {scoreA}");
 
                 Console.WriteLine();
@@ -293,9 +228,25 @@ namespace BlackJackCS
 
                 var endPlayerTurn = "no";
 
+
+
+                // jk I'm not finishing this today
+                // split
+                //if (deck[0].Rank == deck[1].Rank)
+                // {
+                //     Console.Write("Do you want to split?");
+                //     var willSplit = Console.ReadLine();
+                //     if (willSplit == "yes")
+                //     {
+                //         var hand1 = new List<Card> { deck[0] };
+                //         var hand2 = new List<Card> { deck[1] };
+                //     }
+                // }
+
+
+                // Player's Turn
+
                 var score = scoreA;
-
-
 
                 while (score < 21 && endPlayerTurn != "yes")
                 {
@@ -311,6 +262,7 @@ namespace BlackJackCS
 
                         score = score + deck[newCard].Value();
 
+                        // change aces to one points if needed
                         if (score > 21)
                         {
                             foreach (var findAce in playerHand)
@@ -326,8 +278,7 @@ namespace BlackJackCS
 
                                     score = newScore + acePoints;
 
-                                    //     var diffScore = TryAgain(playerHand);
-                                    //     score = diffScore;
+
 
                                 }
                             }
@@ -341,7 +292,8 @@ namespace BlackJackCS
                     else if (answer == "Stand" || answer == "stand" || answer == "s")
                     {
                         Console.WriteLine();
-                        Console.WriteLine($"Score = {score}");
+                        Console.WriteLine($"Score: {score}");
+                        // end turn
                         endPlayerTurn = "yes";
                     }
                     else { Console.WriteLine("Error. Please try again."); }
@@ -393,10 +345,12 @@ namespace BlackJackCS
 
                 while (scoreD <= 17 && score <= 21)
                 {
+                    Console.WriteLine();
                     int newCardD = playerHand.Count + dealerHand.Count;
                     dealerHand.Add(deck[newCardD]);
                     Console.WriteLine($"{deck[newCardD].Rank} of {deck[newCardD].Suit}");
                     scoreD = scoreD + deck[newCardD].Value();
+                    // changes aces if needed
                     if (scoreD > 21)
                     {
                         foreach (var findAceD in dealerHand)
@@ -414,16 +368,20 @@ namespace BlackJackCS
                             }
                         }
                     }
-                    Console.WriteLine("Dealer's Score  = " + scoreD);
+                    Console.WriteLine("Dealer's Score: " + scoreD);
+
+                    Console.WriteLine();
                 }
 
 
 
                 Console.WriteLine();
 
+                // dealer did NOT bust
                 if (scoreD <= 21)
                 {
 
+                    // player had a higher score and didn't bust
                     if (score > scoreD && score <= 21)
                     {
                         if (score == 21)
@@ -452,6 +410,8 @@ namespace BlackJackCS
                         Console.WriteLine("Dealer wins.");
                     }
                 }
+
+                // dealer busts
                 else
                 {
                     Console.WriteLine("Dealer busts.");
