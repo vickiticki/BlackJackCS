@@ -202,7 +202,7 @@ namespace BlackJackCS
             {
                 if (aCard.Rank == "Ace")
                 {
-                    Console.WriteLine("there is an ace");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -210,6 +210,19 @@ namespace BlackJackCS
                 }
             }
             return noAceHand;
+
+        }
+        static int AcePoint(List<Card> countAces)
+        {
+            int aceScore = 0;
+            foreach (var isItAce in countAces)
+            {
+                if (isItAce.Rank == "Ace")
+                {
+                    aceScore = aceScore + 1;
+                }
+            }
+            return aceScore;
 
         }
         static void Main(string[] args)
@@ -305,10 +318,13 @@ namespace BlackJackCS
                                 if (findAce.Rank == "Ace")
                                 {
 
+                                    var acePoints = AcePoint(playerHand);
                                     var diffHand = NewerHand(playerHand);
                                     var newScore = FindScore(diffHand);
 
-                                    score = newScore + 1;
+
+
+                                    score = newScore + acePoints;
 
                                     //     var diffScore = TryAgain(playerHand);
                                     //     score = diffScore;
@@ -381,20 +397,19 @@ namespace BlackJackCS
                     dealerHand.Add(deck[newCardD]);
                     Console.WriteLine($"{deck[newCardD].Rank} of {deck[newCardD].Suit}");
                     scoreD = scoreD + deck[newCardD].Value();
-                    if (score > 21)
+                    if (scoreD > 21)
                     {
                         foreach (var findAceD in dealerHand)
                         {
                             if (findAceD.Rank == "Ace")
                             {
 
-                                var diffHandD = NewerHand(playerHand);
+                                var acePointsD = AcePoint(dealerHand);
+                                var diffHandD = NewerHand(dealerHand);
                                 var newScoreD = FindScore(diffHandD);
 
-                                scoreD = newScoreD + 1;
+                                scoreD = newScoreD + acePointsD;
 
-                                //     var diffScore = TryAgain(playerHand);
-                                //     score = diffScore;
 
                             }
                         }
