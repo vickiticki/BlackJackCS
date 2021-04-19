@@ -155,11 +155,11 @@ namespace BlackJackCS
             return someScore;
         }
 
-        static List<Card> NewerHand(List<Card> aceHand)
+        static Hand NewerHand(Hand aceHand)
         {
 
-            var noAceHand = new List<Card>();
-            foreach (var aCard in aceHand)
+            var noAceHand = new Hand();
+            foreach (var aCard in aceHand.IndividualCards)
             {
                 if (aCard.Rank == "Ace")
                 {
@@ -167,16 +167,16 @@ namespace BlackJackCS
                 }
                 else
                 {
-                    noAceHand.Add(aCard);
+                    noAceHand.Receive(aCard);
                 }
             }
             return noAceHand;
 
         }
-        static int AcePoint(List<Card> countAces)
+        static int AcePoint(Hand countAces)
         {
             int aceScore = 0;
-            foreach (var isItAce in countAces)
+            foreach (var isItAce in countAces.IndividualCards)
             {
                 if (isItAce.Rank == "Ace")
                 {
@@ -184,8 +184,9 @@ namespace BlackJackCS
                 }
             }
             return aceScore;
-
         }
+
+
         static void Main(string[] args)
         {
             var playGame = "yes";
@@ -216,63 +217,51 @@ namespace BlackJackCS
 
                 var deck = Shuffle(startDeck);
 
-                var pHand = new Hand();
+                var playerHand = new Hand();
 
-                // pHand.Receive(deck[0]);
-                // pHand.Receive(deck[1]);
+                playerHand.Receive(deck[0]);
+                playerHand.Receive(deck[1]);
 
-                // Console.WriteLine("Your cards are:");
-                // foreach (var card in pHand.IndividualCards)
-                // {
-                //     Console.WriteLine(card.Description());
-                // }
-                // Console.Write("Your total hand value is: ");
-                // Console.WriteLine(pHand.TotalValue());
-                // Console.WriteLine(pHand.Size());
+                var dealerHand = new Hand();
+
+                dealerHand.Receive(deck[2]);
+                dealerHand.Receive(deck[3]);
 
 
+                // var handP = new List<Card>() { deck[0], deck[1] };
 
-
-
-                var playerHand = new List<Card>() { deck[0], deck[1] };
-
-                var dealerHand = new List<Card>() { deck[2], deck[3] };
+                // var handD = new List<Card>() { deck[2], deck[3] };
                 Console.WriteLine();
 
 
-
-                var scoreA = 0;
 
                 Console.WriteLine("Enter any word to play");
 
                 var response = Console.ReadLine();
 
-
-
-                Console.WriteLine("Player's Hand");
-                foreach (var playerCard in playerHand)
+                Console.WriteLine("Your cards are:");
+                foreach (var card in playerHand.IndividualCards)
                 {
-
-                    Console.WriteLine(playerCard.Description());
-
-
+                    Console.WriteLine(card.Description());
                 }
+                var scoreA = playerHand.TotalValue();
 
-                scoreA = FindScore(playerHand);
+
 
                 if (scoreA > 21)
                 {
-                    foreach (var findAce in playerHand)
+                    foreach (var findAce in playerHand.IndividualCards)
                     {
                         if (findAce.Rank == "Ace")
                         {
 
                             var acePoints = AcePoint(playerHand);
                             var diffHand = NewerHand(playerHand);
-                            var newScore = FindScore(diffHand);
+                            var newScore = diffHand.TotalValue();
 
 
 
+                            // score1 = newScore + acePoints;
                             scoreA = newScore + acePoints;
 
 
@@ -287,26 +276,13 @@ namespace BlackJackCS
                 Console.WriteLine();
 
                 Console.WriteLine($"Dealer's hand:");
-                Console.WriteLine($"{dealerHand[0].Description()} and a hidden card");
+                Console.WriteLine($"{dealerHand.IndividualCards[0].Description()} and a hidden card");
                 Console.WriteLine();
                 var answer = "Play";
 
                 var endPlayerTurn = "no";
 
 
-
-                // jk I'm not finishing this today
-                // split
-                //if (deck[0].Rank == deck[1].Rank)
-                // {
-                //     Console.Write("Do you want to split?");
-                //     var willSplit = Console.ReadLine();
-                //     if (willSplit == "yes")
-                //     {
-                //         var hand1 = new List<Card> { deck[0] };
-                //         var hand2 = new List<Card> { deck[1] };
-                //     }
-                // }
 
 
                 // Player's Turn
@@ -321,10 +297,11 @@ namespace BlackJackCS
                     Console.WriteLine();
                     if (answer == "Hit" || answer == "hit" || answer == "h")
                     {
-                        int newCardSpot = playerHand.Count + dealerHand.Count;
+                        int newCardSpot = playerHand.Size() + dealerHand.Size();
                         var newCard = deck[newCardSpot];
-                        //playerHand.Add(deck[newCardSpot]);
-                        playerHand.Add(newCard);
+
+                        //handP.Add(newCard);
+                        playerHand.Receive(newCard);
                         Console.WriteLine(newCard.Description());
 
                         score = score + newCard.Value();
@@ -332,14 +309,14 @@ namespace BlackJackCS
                         // change aces to one points if needed
                         if (score > 21)
                         {
-                            foreach (var findAce in playerHand)
+                            foreach (var findAce in playerHand.IndividualCards)
                             {
                                 if (findAce.Rank == "Ace")
                                 {
 
                                     var acePoints = AcePoint(playerHand);
                                     var diffHand = NewerHand(playerHand);
-                                    var newScore = FindScore(diffHand);
+                                    var newScore = diffHand.TotalValue();
 
 
 
@@ -388,19 +365,15 @@ namespace BlackJackCS
 
 
                 Console.WriteLine();
+
+                int scoreD = dealerHand.TotalValue();
                 Console.WriteLine("Dealer's Hand");
-                int scoreD = 0;
 
 
-                foreach (var dealerCard in dealerHand)
+                foreach (var dealerCard in dealerHand.IndividualCards)
                 {
 
                     Console.WriteLine(dealerCard.Description());
-
-                    var pointsD = dealerCard.Value();
-                    // Console.WriteLine(points);
-
-                    scoreD = scoreD + pointsD;
 
 
                 }
@@ -414,23 +387,25 @@ namespace BlackJackCS
                 while (scoreD < 17 && score <= 21)
                 {
                     Console.WriteLine();
-                    int newCardSpotD = playerHand.Count + dealerHand.Count;
+                    int newCardSpotD = playerHand.Size() + dealerHand.Size();
                     var newCardD = deck[newCardSpotD];
 
-                    dealerHand.Add(newCardD);
+                    // handD.Add(newCardD);
+
+                    dealerHand.Receive(newCardD);
                     Console.WriteLine(newCardD.Description());
                     scoreD = scoreD + newCardD.Value();
                     // changes aces if needed
                     if (scoreD > 21)
                     {
-                        foreach (var findAceD in dealerHand)
+                        foreach (var findAceD in dealerHand.IndividualCards)
                         {
                             if (findAceD.Rank == "Ace")
                             {
 
                                 var acePointsD = AcePoint(dealerHand);
                                 var diffHandD = NewerHand(dealerHand);
-                                var newScoreD = FindScore(diffHandD);
+                                var newScoreD = diffHandD.TotalValue();
 
                                 scoreD = newScoreD + acePointsD;
 
