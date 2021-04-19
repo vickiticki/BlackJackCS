@@ -189,9 +189,9 @@ namespace BlackJackCS
 
         static void Main(string[] args)
         {
-            var playGame = "yes";
+            var playGame = true;
 
-            while (playGame == "yes")
+            while (playGame == true)
             {
 
                 Console.WriteLine("Let's Play Blackjack!!");
@@ -293,7 +293,6 @@ namespace BlackJackCS
 
 
 
-
                 // Player's Turn
 
                 var score = scoreA;
@@ -327,11 +326,7 @@ namespace BlackJackCS
                                     var diffHand = NewerHand(playerHand);
                                     var newScore = diffHand.TotalValue();
 
-
-
                                     score = newScore + acePoints;
-
-
 
                                 }
                             }
@@ -383,14 +378,30 @@ namespace BlackJackCS
 
                     Console.WriteLine(dealerCard.Description());
 
-
                 }
+
 
                 //add cards to dealer
 
-
-
                 Console.WriteLine($"Dealer's Score: {scoreD}");
+
+                if (scoreD > 21)
+                {
+                    foreach (var findAceD in dealerHand.IndividualCards)
+                    {
+                        if (findAceD.Rank == "Ace")
+                        {
+
+                            var acePointsD = AcePoint(dealerHand);
+                            var diffHandD = NewerHand(dealerHand);
+                            var newScoreD = diffHandD.TotalValue();
+
+                            scoreD = newScoreD + acePointsD;
+
+
+                        }
+                    }
+                }
 
                 while (scoreD < 17 && score <= 21)
                 {
@@ -482,7 +493,7 @@ namespace BlackJackCS
                 }
                 else
                 {
-                    playGame = "no";
+                    playGame = false;
                     Console.WriteLine();
                 }
 
