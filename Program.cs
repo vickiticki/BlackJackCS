@@ -3,6 +3,49 @@ using System.Collections.Generic;
 
 namespace BlackJackCS
 {
+    class Hand
+    {
+        //   - Properties: A list of individual Cards
+        public List<Card> IndividualCards { get; set; } = new List<Card>();
+        //   - Behaviors:
+        //     - TotalValue representing the sum of the individual Cards in the list.
+        //     - Add a card to the hand
+        //
+        //   Name      Add
+        //   Input     new card
+        //   Work      -- can't auto generate this!
+        //   Output    void (nothing)
+        public void Receive(Card newCard)
+        {
+            // Add this card to the hand
+            IndividualCards.Add(newCard);
+        }
+
+        //     - TotalValue representing the sum of the individual Cards in the list.
+        //
+        //  Name        - TotalValue
+        //  Input       - None 
+        //  Work        - Somehow total up the value of the cards
+        //  Output      - The total value (int) of the cards
+        public int TotalValue()
+        {
+            // Work
+            int handScore = 0;
+            foreach (var classyCard in IndividualCards)
+            {
+                int classyPoints = classyCard.Value();
+                handScore = handScore + classyPoints;
+            }
+
+            return handScore;
+        }
+
+        public int Size()
+        {
+            int handSize = IndividualCards.Count;
+            return handSize;
+        }
+    }
     // make card class
     class Card
     {
@@ -58,6 +101,12 @@ namespace BlackJackCS
 
             }
             return value;
+        }
+
+        public string Description()
+        {
+            var newDescriptionString = $"{Rank} of {Suit}";
+            return newDescriptionString;
         }
 
     }
@@ -167,6 +216,24 @@ namespace BlackJackCS
 
                 var deck = Shuffle(startDeck);
 
+                var pHand = new Hand();
+
+                // pHand.Receive(deck[0]);
+                // pHand.Receive(deck[1]);
+
+                // Console.WriteLine("Your cards are:");
+                // foreach (var card in pHand.IndividualCards)
+                // {
+                //     Console.WriteLine(card.Description());
+                // }
+                // Console.Write("Your total hand value is: ");
+                // Console.WriteLine(pHand.TotalValue());
+                // Console.WriteLine(pHand.Size());
+
+
+
+
+
                 var playerHand = new List<Card>() { deck[0], deck[1] };
 
                 var dealerHand = new List<Card>() { deck[2], deck[3] };
@@ -186,10 +253,8 @@ namespace BlackJackCS
                 foreach (var playerCard in playerHand)
                 {
 
-                    Console.WriteLine(playerCard.Rank + " of " + playerCard.Suit);
+                    Console.WriteLine(playerCard.Description());
 
-                    // var points = playerCard.Value();
-                    // scoreA = scoreA + points;
 
                 }
 
@@ -222,7 +287,7 @@ namespace BlackJackCS
                 Console.WriteLine();
 
                 Console.WriteLine($"Dealer's hand:");
-                Console.WriteLine($"{deck[2].Rank} of {deck[2].Suit} and a hidden card");
+                Console.WriteLine($"{dealerHand[0].Description()} and a hidden card");
                 Console.WriteLine();
                 var answer = "Play";
 
@@ -256,11 +321,13 @@ namespace BlackJackCS
                     Console.WriteLine();
                     if (answer == "Hit" || answer == "hit" || answer == "h")
                     {
-                        int newCard = playerHand.Count + dealerHand.Count;
-                        playerHand.Add(deck[newCard]);
-                        Console.WriteLine($"{deck[newCard].Rank} of {deck[newCard].Suit}");
+                        int newCardSpot = playerHand.Count + dealerHand.Count;
+                        var newCard = deck[newCardSpot];
+                        //playerHand.Add(deck[newCardSpot]);
+                        playerHand.Add(newCard);
+                        Console.WriteLine(newCard.Description());
 
-                        score = score + deck[newCard].Value();
+                        score = score + newCard.Value();
 
                         // change aces to one points if needed
                         if (score > 21)
@@ -286,7 +353,8 @@ namespace BlackJackCS
 
 
                         Console.WriteLine($"Player's score: {score}");
-                        newCard++;
+                        // I think this was necessary at some point but i changed it??
+                        // newCard++;
 
                     }
                     else if (answer == "Stand" || answer == "stand" || answer == "s")
@@ -327,7 +395,7 @@ namespace BlackJackCS
                 foreach (var dealerCard in dealerHand)
                 {
 
-                    Console.WriteLine(dealerCard.Rank + " of " + dealerCard.Suit);
+                    Console.WriteLine(dealerCard.Description());
 
                     var pointsD = dealerCard.Value();
                     // Console.WriteLine(points);
@@ -341,15 +409,17 @@ namespace BlackJackCS
 
 
 
-                Console.WriteLine($"Dealer's Score = {scoreD}");
+                Console.WriteLine($"Dealer's Score: {scoreD}");
 
-                while (scoreD <= 17 && score <= 21)
+                while (scoreD < 17 && score <= 21)
                 {
                     Console.WriteLine();
-                    int newCardD = playerHand.Count + dealerHand.Count;
-                    dealerHand.Add(deck[newCardD]);
-                    Console.WriteLine($"{deck[newCardD].Rank} of {deck[newCardD].Suit}");
-                    scoreD = scoreD + deck[newCardD].Value();
+                    int newCardSpotD = playerHand.Count + dealerHand.Count;
+                    var newCardD = deck[newCardSpotD];
+
+                    dealerHand.Add(newCardD);
+                    Console.WriteLine(newCardD.Description());
+                    scoreD = scoreD + newCardD.Value();
                     // changes aces if needed
                     if (scoreD > 21)
                     {
