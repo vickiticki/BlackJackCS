@@ -246,7 +246,16 @@ namespace BlackJackCS
                 }
                 var scoreA = playerHand.TotalValue();
 
+                // not doing this today
+                // 
+                // if the first two cards are a pair, ask if they want to split
+                // if (deck[0].Rank == deck[1].Rank)
+                // {
+                //     Console.Write("Do you want to split? Yes/No");
+                //     var wantSplit = Console.ReadLine();
 
+                //     // if yes split the cards
+                // }
 
                 if (scoreA > 21)
                 {
