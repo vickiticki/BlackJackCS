@@ -228,8 +228,8 @@ namespace BlackJackCS
                 dealerHand.Receive(deck[3]);
 
 
+                // changed hands to a class instead of list so this old code is unnecessary 
                 // var handP = new List<Card>() { deck[0], deck[1] };
-
                 // var handD = new List<Card>() { deck[2], deck[3] };
                 Console.WriteLine();
 
@@ -293,9 +293,9 @@ namespace BlackJackCS
                 {
                     Console.Write("Hit or Stand? ");
 
-                    answer = Console.ReadLine();
+                    answer = Console.ReadLine().ToLower();
                     Console.WriteLine();
-                    if (answer == "Hit" || answer == "hit" || answer == "h")
+                    if (answer == "hit" || answer == "h")
                     {
                         int newCardSpot = playerHand.Size() + dealerHand.Size();
                         var newCard = deck[newCardSpot];
@@ -330,11 +330,10 @@ namespace BlackJackCS
 
 
                         Console.WriteLine($"Player's score: {score}");
-                        // I think this was necessary at some point but i changed it??
-                        // newCard++;
+
 
                     }
-                    else if (answer == "Stand" || answer == "stand" || answer == "s")
+                    else if (answer == "stand" || answer == "s")
                     {
                         Console.WriteLine();
                         Console.WriteLine($"Score: {score}");
@@ -466,11 +465,7 @@ namespace BlackJackCS
                 Console.WriteLine();
                 Console.Write("Want to play again? yes/no ");
 
-                string anotherGame = Console.ReadLine();
-
-                // why didn't this work??
-                // anotherGame = anotherGame.ToLower;
-                // anotherGame.ToLower;
+                string anotherGame = Console.ReadLine().ToLower();
 
                 if (anotherGame == "y" || anotherGame == "yes")
                 {
