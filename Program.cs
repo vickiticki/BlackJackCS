@@ -235,7 +235,7 @@ namespace BlackJackCS
 
 
 
-                Console.WriteLine("Enter any word to play");
+                Console.Write("Enter any word to play");
 
                 var response = Console.ReadLine();
 
@@ -259,6 +259,8 @@ namespace BlackJackCS
 
                 if (scoreA > 21)
                 {
+                    // there's gotta be a better way to do this
+                    // check for aces and change to 1
                     foreach (var findAce in playerHand.IndividualCards)
                     {
                         if (findAce.Rank == "Ace")
@@ -314,7 +316,6 @@ namespace BlackJackCS
 
                         score = score + newCard.Value();
 
-                        // change aces to one points if needed
                         if (score > 21)
                         {
                             foreach (var findAce in playerHand.IndividualCards)
@@ -504,10 +505,6 @@ namespace BlackJackCS
             // I messed up the commit. I am confusion.
 
 
-
-
-            // Console.WriteLine($"This {firstCard.Rank} of {firstCard.Suit} it is worth {firstCard.Value()} points");
-            // Console.WriteLine($"This {secondCard.Rank} of {secondCard.Suit} it is worth {secondCard.Value()} points");
 
         }
     }
